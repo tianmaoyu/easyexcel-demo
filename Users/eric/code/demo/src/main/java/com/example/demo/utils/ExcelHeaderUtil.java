@@ -16,18 +16,19 @@ public class ExcelHeaderUtil {
 
     private static MessageSource messageSource;
 
-
     public static List<List<String>> buildHeaders(Class<?> clazz, Locale locale) {
-
-       if(messageSource==null){
-           synchronized(ExcelHeaderUtil.class) {
-               if(messageSource==null){
-//                 SpringContextHolder.getBean(MessageSource.class);
-                   messageSource = SpringContextHolder.getBean("messageSource", MessageSource.class);
-
-               }
-           }
-       }
+        if (messageSource == null) {
+            synchronized (ExcelHeaderUtil.class) {
+                if (messageSource == null) {
+                    // 确保 MessageSource Bean 已经被正确加载
+                    if (SpringContextHolder.containsBean("messageSource")) {
+                        messageSource = SpringContextHolder.getBean(MessageSource.class);
+                    } else {
+                        throw new IllegalStateException("MessageSource bean not found in Spring context");
+                    }
+                }
+            }
+        }
 
         List<List<String>> lists = ListUtils.newArrayList();
 

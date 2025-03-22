@@ -3,6 +3,7 @@ package com.example.demo.config;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
@@ -17,6 +18,7 @@ public class MessageSourceConfig {
     }
 
     @Bean
+//    @DependsOn("springContextHolder")
     public MessageSource messageSource(RedisMessageSource redisMessageSource, MessageSource defaultMessageSource) {
         return new DelegatingRedisMessageSource(redisMessageSource, defaultMessageSource);
     }

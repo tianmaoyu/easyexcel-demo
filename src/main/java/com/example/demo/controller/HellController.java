@@ -7,6 +7,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.example.demo.entity.UserData;
+import com.example.demo.utils.ExcelHeaderUtil;
 import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,12 +44,15 @@ public class HellController {
 
     // 导出功能
     @GetMapping("/export")
-    public void export(HttpServletResponse response) throws IOException {
+    public void export(HttpServletResponse response,@RequestParam String lang) throws IOException {
         // 设置响应头信息
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         String fileName = URLEncoder.encode("用户信息", "UTF-8");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+
+        Locale locale = new Locale(lang);
+        List<List<String>> headers = ExcelHeaderUtil.buildHeaders(UserData.class, locale);
 
         // 创建一个示例数据列表
         List<UserData> userDataList1 = new ArrayList<>();
@@ -76,12 +80,19 @@ public class HellController {
         // 创建 ExcelWriter 对象
         ExcelWriter excelWriter = EasyExcel.write(outputStream, UserData.class).build();
 
+
         // 写入第一个 sheet
-        WriteSheet sheet1 = EasyExcel.writerSheet(0, "用户信息1").build();
+        WriteSheet sheet1 = EasyExcel
+                .writerSheet(0, "用户信息1")
+                .head(headers)
+                .build();
         excelWriter.write(userDataList1, sheet1);
 
         // 写入第二个 sheet
-        WriteSheet sheet2 = EasyExcel.writerSheet(1, "用户信息2").build();
+        WriteSheet sheet2 = EasyExcel
+                .writerSheet(1, "用户信息2")
+                .head(headers)
+                .build();
         excelWriter.write(userDataList2, sheet2);
         excelWriter.finish();
 
