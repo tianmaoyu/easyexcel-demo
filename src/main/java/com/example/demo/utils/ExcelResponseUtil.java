@@ -18,19 +18,18 @@ public class ExcelResponseUtil {
             throw new IllegalArgumentException("byteArray and fileName must not be null");
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_OCTET_STREAM);
-
+        // 处理文件名
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
                 .replaceAll("\\+", "%20");
-
         String contentDisposition = String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s",
                 encodedFileName, encodedFileName);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_OCTET_STREAM);
         headers.add("Content-Disposition", contentDisposition);
 
-        // 返回响应实体
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(byteArray);
+        return ResponseEntity.ok().headers(headers).body(byteArray);
+
+
     }
 }
