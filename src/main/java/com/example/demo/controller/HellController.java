@@ -44,7 +44,7 @@ public class HellController {
         return messageSource.getMessage("name", null, locale);
     }
 
-    // 导出功能
+    // 大文件，避免缓存
     @GetMapping("/export")
     public void export(HttpServletResponse response, @RequestParam String lang) throws IOException {
         // 设置响应头信息
@@ -77,10 +77,10 @@ public class HellController {
 
 
         //多个工作sheet 这个有效
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String filePath2 = "./test_2.xlsx";
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        String filePath2 = "./test_2.xlsx";
         // 创建 ExcelWriter 对象
-        ExcelWriter excelWriter = EasyExcel.write(outputStream, UserData.class).build();
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), UserData.class).build();
 
 
         // 写入第一个 sheet
@@ -98,7 +98,7 @@ public class HellController {
         excelWriter.write(userDataList2, sheet2);
         excelWriter.finish();
 
-        response.getOutputStream().write(outputStream.toByteArray());
+//        response.getOutputStream().write(outputStream.toByteArray());
 
 
 //        // 输出流
@@ -185,7 +185,7 @@ public class HellController {
 }
 
 
-// 示例监听器类
+// 示例监听器类- 大数据量
 class UserDataListener extends AnalysisEventListener<UserData> {
     private List<UserData> userDataList = new ArrayList<>();
 
