@@ -2,18 +2,16 @@ package com.example.demo.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.example.demo.entity.UserData;
+import com.example.demo.service.DemoService;
 import com.example.demo.utils.ExcelHeaderUtil;
-import io.swagger.models.auth.In;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.demo.utils.ExcelResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,10 +27,14 @@ import java.util.Locale;
 @RequestMapping("/hello")
 public class HellController {
 
+    @Autowired
+    private DemoService demoService;
+
     @GetMapping("/hi")
     public String hi() {
         return "Hello World";
     }
+
     @Autowired
     private MessageSource messageSource;
 
@@ -44,7 +46,7 @@ public class HellController {
 
     // 导出功能
     @GetMapping("/export")
-    public void export(HttpServletResponse response,@RequestParam String lang) throws IOException {
+    public void export(HttpServletResponse response, @RequestParam String lang) throws IOException {
         // 设置响应头信息
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -52,7 +54,7 @@ public class HellController {
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
 
         Locale locale = new Locale(lang);
-        List<List<String>> headers = ExcelHeaderUtil.buildHeaders(UserData.class, locale);
+        List<List<String>> headers = ExcelHeaderUtil.getHeaders(UserData.class, locale);
 
         // 创建一个示例数据列表
         List<UserData> userDataList1 = new ArrayList<>();
@@ -151,7 +153,7 @@ public class HellController {
                 .sheet()
                 .doRead();
 
-        List<UserData> userDataList =userDataListener.getList();
+        List<UserData> userDataList = userDataListener.getList();
 
         // 处理导入的数据（这里仅打印）
         for (UserData userData : userDataList) {
@@ -160,18 +162,39 @@ public class HellController {
 
         return userDataList.size();
     }
-}
 
+    @GetMapping("/downloadEasyExcel")
+    public ResponseEntity<byte[]> downloadEasyExcel() {
+
+        try {
+
+            byte[] excelBytes = demoService.excelReport(1);
+
+            ResponseEntity<byte[]> responseEntity = ExcelResponseUtil.getResponseEntity(excelBytes, "中昂微 动的.xlsx");
+
+            return responseEntity;
+
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
+
+}
 
 
 // 示例监听器类
 class UserDataListener extends AnalysisEventListener<UserData> {
     private List<UserData> userDataList = new ArrayList<>();
+
     @Override
     public void invoke(UserData userData, AnalysisContext analysisContext) {
 
         userDataList.add(userData);
     }
+
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
         // 所有数据解析完成后的操作

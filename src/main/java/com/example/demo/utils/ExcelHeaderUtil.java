@@ -3,12 +3,10 @@ package com.example.demo.utils;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.util.ListUtils;
 import com.example.demo.config.SpringContextHolder;
-import org.springframework.boot.BootstrapContextClosedEvent;
 import org.springframework.context.MessageSource;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,7 +15,7 @@ public class ExcelHeaderUtil {
     private static MessageSource messageSource;
 
 
-    public static List<List<String>> buildHeaders(Class<?> clazz, Locale locale) {
+    public static List<List<String>> getHeaders(Class<?> clazz, Locale locale) {
 
        if(messageSource==null){
            synchronized(ExcelHeaderUtil.class) {
