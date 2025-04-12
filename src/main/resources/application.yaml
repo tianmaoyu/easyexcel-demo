@@ -12,8 +12,16 @@ spring:
       eager: true
       application:
         name: demo-service
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        namespace: public
+        server-addr: localhost:8848
 server:
   port: 8888
+
 
 management:
   endpoint:
