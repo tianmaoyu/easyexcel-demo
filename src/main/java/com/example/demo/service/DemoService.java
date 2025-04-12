@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface DemoService {
-    void doSomething();
+   public void doSomething();
 
-    void doSomethingElse();
+    public void doSomethingElse();
 
     public byte[] excelReport(Integer id) throws IOException;
 }

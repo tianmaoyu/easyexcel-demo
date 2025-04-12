@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
@@ -26,6 +28,16 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/hello")
 public class HellController {
+
+    @SentinelResource(value = "getUser", blockHandler = "blockHandler")
+    public String getUser() {
+        return "User Info";
+    }
+
+    // 限流/降级处理方法
+    public String blockHandler(BlockException ex) {
+        return "请求被限流";
+    }
 
     @Autowired
     private DemoService demoService;
