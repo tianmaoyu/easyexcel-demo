@@ -32,5 +32,6 @@ management:
       exposure:
         include: "*"
 
-
+tlog:
+  pattern: $preApp-$preHost-$preIp-$spanId-$traceId
 

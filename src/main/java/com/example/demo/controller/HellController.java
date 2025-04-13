@@ -7,10 +7,14 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.example.demo.convert.UserConvert;
+import com.example.demo.entity.User;
 import com.example.demo.entity.UserData;
+import com.example.demo.entity.UserVo;
 import com.example.demo.service.DemoService;
 import com.example.demo.utils.ExcelHeaderUtil;
 import com.example.demo.utils.ExcelResponseUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @RestController
 @RequestMapping("/hello")
 public class HellController {
 
+
+    @Autowired
+    private  UserConvert userConvert;
     @SentinelResource(value = "getUser", blockHandler = "blockHandler")
     public String getUser() {
         return "User Info";
@@ -44,6 +52,19 @@ public class HellController {
 
     @GetMapping("/hi")
     public String hi() {
+        log.info(" hi:{}", "getUser");
+
+        User user = new User();
+        user.setAge(18);
+        user.setName("eric");
+
+        UserData dto = userConvert.toDto(user);
+        log.info("dto {}", dto);
+
+        UserVo vo = userConvert.toVo(user);
+        log.info("vo {}", vo);
+
+        new Thread(() -> log.info("这是异步日志")).start();
         return "Hello World";
     }
 
