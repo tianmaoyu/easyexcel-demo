@@ -7,21 +7,21 @@ import org.mapstruct.*;
 
 import java.util.Date;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public abstract class UserConvert {
 
     public abstract UserData toDto(User userEntity);
+
     @AfterMapping
     protected void toDtoAfterMapping(User source, @MappingTarget UserData target) {
         target.setName(source.getName() + new Date());
     }
 
     public abstract UserVo toVo(User userEntity);
+
     @AfterMapping
     protected void toVoAfterMapping(User source, @MappingTarget UserVo target) {
         target.setFullName(source.getName() + " " + source.getAge());
     }
-
-
 
 }
