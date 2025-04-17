@@ -36,7 +36,8 @@ public class HellController {
 
 
     @Autowired
-    private  UserConvert userConvert;
+    private UserConvert userConvert;
+
     @SentinelResource(value = "getUser", blockHandler = "blockHandler")
     public String getUser() {
         return "User Info";
