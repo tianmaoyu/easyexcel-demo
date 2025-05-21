@@ -12,16 +12,22 @@ public class AutoFillHandler implements MetaObjectHandler {
     // 插入时触发填充
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createId", Long.class, 10L);
-        this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
-        this.strictInsertFill(metaObject, "updateId", Long.class, 10L);
-        this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
+        if (metaObject.getValue("createId") == null)
+            this.strictInsertFill(metaObject, "createId", Long.class, 10L);
+        if (metaObject.getValue("createTime") == null)
+            this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
+        if (metaObject.getValue("updateId") == null)
+            this.strictInsertFill(metaObject, "updateId", Long.class, 10L);
+        if (metaObject.getValue("updateTime") == null)
+            this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
     }
 
     // 更新时触发填充
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "updateId", Long.class, 10L);
-        this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
+        if (metaObject.getValue("updateId") == null)
+            this.strictUpdateFill(metaObject, "updateId", Long.class, 10L);
+        if (metaObject.getValue("updateTime") == null)
+            this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
     }
 }
