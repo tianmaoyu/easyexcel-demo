@@ -1,3 +1,5 @@
+server:
+  port: 9090
 spring:
   application:
     name: demo-service
@@ -19,9 +21,6 @@ spring:
       config:
         namespace: public
         server-addr: localhost:8848
-server:
-  port: 8888
-
 
 management:
   endpoint:
