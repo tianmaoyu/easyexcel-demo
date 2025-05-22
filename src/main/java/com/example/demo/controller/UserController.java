@@ -34,4 +34,8 @@ public class UserController {
     public Boolean edit(User user){
        return userService.edit(user);
     }
+    @PostMapping("/editLambda")
+    public Boolean editLambda( String name, Long userId){
+        return userService.editLambda(userId,  name);
+    }
 }
