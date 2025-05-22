@@ -1,8 +1,10 @@
 package com.example.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
@@ -12,7 +14,16 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 @Configuration
-public class WebConfig {
+public class WebConfig  implements WebMvcConfigurer {
+
+    @Autowired
+    private StringToUserTypeConverter stringToUserTypeConverter;
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(stringToUserTypeConverter);
+    }
+
 
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
