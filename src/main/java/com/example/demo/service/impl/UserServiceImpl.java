@@ -1,17 +1,14 @@
 package com.example.demo.service.impl;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUnit;
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.domain.User;
 import com.example.demo.service.UserService;
 import com.example.demo.mapper.UserMapper;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -20,29 +17,61 @@ import java.util.Date;
  * @createDate 2025-05-21 21:28:51
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserMapper userMapper;
     @Override
-    public Boolean edit(User user) {
-        return this.updateById(user);
+    public Boolean addList(Integer count) {
+        ArrayList<User> users = new ArrayList<>();
+        for (int i=0;i<10;i++) {
+            User u = new User();
+            u.setName("eric"+i);
+            u.setAge(i);
+            u.setEmail("eric"+i+"@qq.com");
+            users.add(u);
+        }
+        boolean saved = userMapper.insertBatch(users);
+        return saved;
     }
+
+    @Override
+    public int edit(User user) {
+        return userMapper.updateById(user);
+    }
+
+
+
 
     @Override
     public Boolean editLambda(Long id, String name) {
 
         var date = parseStringToDate("2025-05-23 14:30:00");
 
-        var update = lambdaUpdate()
-                .eq(User::getId, id)
-                .set(User::getName, name)
-                .update(new User());
+        var update = userMapper.updateNameById(name,id);
 
         return update;
     }
+
+    @Override
+    public User getById(Long id) {
+        return userMapper.getById(id);
+    }
+
+    @Override
+    public User save(User user) {
+        userMapper.insert(user);
+        return user;
+    }
+
     @SneakyThrows
     public static Date parseStringToDate(String dateStr) {
         var sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
         return sdf.parse(dateStr);
     }
+
+
+
 }
 
 

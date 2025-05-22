@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.domain.UserType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
