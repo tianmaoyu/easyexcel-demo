@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@ApiModel("用户类型")
 @Getter
 @AllArgsConstructor
 public enum UserType {

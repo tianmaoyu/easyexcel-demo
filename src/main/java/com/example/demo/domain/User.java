@@ -19,7 +19,7 @@ public class User {
     private Integer age;
     private String email;
 
-//    private UserType userType;
+    private UserType userType;
 
     @TableField(fill = FieldFill.INSERT)
     private Long createId;
