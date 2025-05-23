@@ -23,6 +23,13 @@ public class UserController {
         return user;
     }
 
+//    @GetMapping("/{enumName}")
+//    public List<EnumDTO> getEnumList(@PathVariable String enumName) {
+//        Class<Enum> enumClass = EnumUtil.getEnumClass(enumName);
+//        return Arrays.stream(enumClass.getEnumConstants())
+//                .map(e -> new EnumDTO(((IEnum<?>)e).getCode(), ((IEnum<?>)e).getDesc()))
+//                .collect(Collectors.toList());
+//    }
     //add
     @PostMapping("/add")
     public User add(@RequestBody UserAddParams addParams){

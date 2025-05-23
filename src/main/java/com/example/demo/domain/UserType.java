@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.example.demo.tenum.IEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
@@ -10,9 +12,10 @@ import lombok.Setter;
 @ApiModel("用户类型")
 @Getter
 @AllArgsConstructor
-public enum UserType {
+public enum UserType implements IEnum<String> {
     ADMIN("002","admin"),
     USER("001","user");
+    @EnumValue
     private String code;
     private String desc;
     @JsonValue
