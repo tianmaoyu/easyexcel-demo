@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
-public interface IEnum<T> {
 
-
+public interface IEnum<T>  {
     @JsonValue
     T getCode();
 

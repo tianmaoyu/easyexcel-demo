@@ -4,16 +4,23 @@ import com.example.demo.domain.User;
 import com.example.demo.domain.UserType;
 import com.example.demo.param.UserAddParams;
 import com.example.demo.service.UserService;
+import com.example.demo.tenum.UserStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private UserService  userService;
 
@@ -70,4 +77,29 @@ public class UserController {
         objects.add(UserType.ADMIN);
         return objects;
     }
+
+    @GetMapping("/getUserStatus")
+    public ArrayList<UserStatus> getUserStatus(@RequestParam UserStatus userStatus){
+
+        ArrayList<UserStatus> objects = new ArrayList<>();
+        objects.add(userStatus);
+        objects.add(UserStatus.ENABLED);
+        objects.add(UserStatus.DISABLED);
+        objects.add(UserStatus.LOCKED);
+        return objects;
+
+
+    }
+
+    @SneakyThrows
+    @PostMapping("/addUserStatus")
+    public ArrayList<UserStatus> addUserStatus(@RequestBody ArrayList<UserStatus> userStatus){
+
+        String jsonArray = objectMapper.writeValueAsString(userStatus);
+        log.info("userStatus:{}",jsonArray);
+        return userStatus;
+
+
+    }
+
 }

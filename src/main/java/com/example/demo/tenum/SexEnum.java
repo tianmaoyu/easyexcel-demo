@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 @Getter
@@ -22,5 +23,4 @@ public enum SexEnum implements IEnum<Integer> {
                 .findFirst()
                 .orElse(null);
     }
-
 }
