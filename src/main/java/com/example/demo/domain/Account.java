@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 import java.time.LocalDateTime;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
