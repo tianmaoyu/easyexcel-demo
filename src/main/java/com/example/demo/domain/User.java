@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.demo.annotation.CreateId;
 import com.example.demo.annotation.UpdateId;
+import com.example.demo.tenum.SexEnum;
 import lombok.Data;
 import java.util.Date;
 import javax.validation.constraints.*;
@@ -20,6 +21,7 @@ public class User {
     private String email;
 
     private UserType userType;
+    private SexEnum sex;
 
     @TableField(fill = FieldFill.INSERT)
     private Long createId;

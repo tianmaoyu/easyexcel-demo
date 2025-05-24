@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
+import java.util.Set;
 
 @Configuration
 public class MyBatisAutoConfiguration {
@@ -18,10 +19,10 @@ public class MyBatisAutoConfiguration {
     public ConfigurationCustomizer mybatisTypeHandlerRegistryCustomizer() {
         return configuration -> {
             TypeHandlerRegistry registry = configuration.getTypeHandlerRegistry();
-            
+
+            Set<Class<? extends IEnum>> set = new Reflections("com.example.demo").getSubTypesOf(IEnum.class);
             // 扫描所有实现 IEnum 的枚举
-            new Reflections("com.yourpackage.enums").getSubTypesOf(IEnum.class)
-                .stream()
+            set.stream()
                 .filter(Class::isEnum)
                 .forEach(enumClass -> {
                     // 解析 code 类型
@@ -33,7 +34,7 @@ public class MyBatisAutoConfiguration {
     }
 
     // 解析枚举的 code 泛型类型
-    private Class<?> resolveCodeType(Class<?> enumClass) {
+    public Class<?> resolveCodeType(Class<?> enumClass) {
         return Arrays.stream(enumClass.getGenericInterfaces())
             .filter(t -> t instanceof ParameterizedType)
             .map(t -> (ParameterizedType) t)
@@ -45,7 +46,7 @@ public class MyBatisAutoConfiguration {
     }
 
     // 根据 code 类型推断 JDBC 类型
-    private JdbcType resolveJdbcType(Class<?> codeType) {
+    public JdbcType resolveJdbcType(Class<?> codeType) {
         if (Integer.class.isAssignableFrom(codeType)) {
             return JdbcType.INTEGER;
         } else if (String.class.isAssignableFrom(codeType)) {
