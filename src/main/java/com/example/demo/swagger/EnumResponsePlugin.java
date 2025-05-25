@@ -44,7 +44,7 @@ public class EnumResponsePlugin implements OperationBuilderPlugin {
 //        if(typeName.contains("Integer")){
 //            typeName=Integer.class.getSimpleName();
 //        }
-
+//
 
         // 3. 修改响应描述和 Schema
         context.operationBuilder()
