@@ -10,7 +10,7 @@ import springfox.documentation.spi.schema.contexts.ModelContext;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Component
+//@Component
 public class LegacyEnumCodeDescPluginv1 implements ModelBuilderPlugin {
 
     @Override

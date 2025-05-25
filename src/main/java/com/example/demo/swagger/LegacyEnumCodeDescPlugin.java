@@ -1,6 +1,8 @@
 package com.example.demo.swagger;
 
+import com.example.demo.tenum.IEnum;
 import com.google.common.base.Optional;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Model;
 import springfox.documentation.schema.ModelProperty;
@@ -8,9 +10,12 @@ import springfox.documentation.service.AllowableListValues;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelContext;
+import springfox.documentation.swagger.common.SwaggerPluginSupport;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER - 100)
 @Component
 public class LegacyEnumCodeDescPlugin implements ModelBuilderPlugin {
 
@@ -18,7 +23,11 @@ public class LegacyEnumCodeDescPlugin implements ModelBuilderPlugin {
     public void apply(ModelContext context) {
         // 1. 获取模型类型
         Class<?> type = context.getType().getErasedType();
-        if (!type.isEnum()) return;
+
+
+        if (!type.isEnum() || !IEnum.class.isAssignableFrom(type)) {
+            return;
+        }
 
         // 2. 准备元数据
         List<Object> codes = new ArrayList<>();

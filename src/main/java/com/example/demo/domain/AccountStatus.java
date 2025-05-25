@@ -2,11 +2,13 @@ package com.example.demo.domain;
 
 
 import com.example.demo.tenum.IEnum;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
 
+@ApiModel
 @Getter
 @AllArgsConstructor
 public enum AccountStatus implements IEnum<String> {

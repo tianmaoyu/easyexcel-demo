@@ -1,5 +1,8 @@
 package com.example.demo.swagger;
 
+import com.example.demo.tenum.IEnum;
+import com.fasterxml.classmate.ResolvedType;
+import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import org.springframework.stereotype.Component;
@@ -13,7 +16,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @Component
-public class EnumCodeDescPlugin implements ModelPropertyBuilderPlugin {
+public class TEnumModelPropertyBuilderPlugin implements ModelPropertyBuilderPlugin {
+    private final TypeResolver typeResolver = new TypeResolver();
+
+
     @Override
     public void apply(ModelPropertyContext context) {
         Optional<AnnotatedField> fieldOptional = context.getBeanPropertyDefinition()
@@ -25,7 +31,10 @@ public class EnumCodeDescPlugin implements ModelPropertyBuilderPlugin {
         Class<?> fieldType = field.getType();
         
         // 仅处理枚举类型
-        if (!fieldType.isEnum()) return;
+//        if (!fieldType.isEnum()) return;
+        if (!fieldType.isEnum() || !IEnum.class.isAssignableFrom(fieldType)) {
+            return;
+        }
         
         // 获取枚举实例的 code 和 desc
         Object[] enumConstants = fieldType.getEnumConstants();
@@ -44,11 +53,11 @@ public class EnumCodeDescPlugin implements ModelPropertyBuilderPlugin {
                 throw new RuntimeException("枚举必须包含 getCode() 和 getDesc() 方法", e);
             }
         }
-        
+        ResolvedType resolvedType = resolveCodeType(fieldType);
         // 修改 Schema 的允许值和描述
         context.getBuilder()
-            .type(context.getResolver().resolve(String.class)) // 假设 code 是 Integer 类型
-            .example(codes.isEmpty() ? null : codes.get(0))
+            .type(resolvedType) // 假设 code 是 Integer 类型
+            .example(codes.get(0))// 默认填充的值
             .description(buildDescription(codeDescMap))
                 .allowableValues(new AllowableValues() {
                 });
@@ -64,7 +73,7 @@ public class EnumCodeDescPlugin implements ModelPropertyBuilderPlugin {
         codeDescMap.forEach((code, desc) ->
                 sb.append("<br>").append(code).append(": ").append(desc)
         );
-
+        sb.append("<br>");
         return sb.toString();
     }
 
@@ -73,4 +82,14 @@ public class EnumCodeDescPlugin implements ModelPropertyBuilderPlugin {
         return true;
     }
 
+
+    private ResolvedType resolveCodeType(Class<?> enumType) {
+        try {
+            Method getCode = enumType.getMethod("getCode");
+            Class<?> codeClass = getCode.getReturnType();
+            return typeResolver.resolve(codeClass);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("枚举必须实现getCode方法", e);
+        }
+    }
 }
