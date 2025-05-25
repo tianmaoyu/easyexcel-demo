@@ -1,7 +1,10 @@
 package com.example.demo.swagger;
 
 import com.example.demo.tenum.IEnum;
+import com.fasterxml.classmate.ResolvedType;
+import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Optional;
+import io.swagger.models.auth.In;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -16,9 +19,10 @@ import springfox.documentation.swagger.common.SwaggerPluginSupport;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER - 100)
+@Order(Integer.MAX_VALUE)
 @Component
 public class EnumResponsePlugin implements OperationBuilderPlugin {
+    private final TypeResolver typeResolver = new TypeResolver();
 
     @Override
     public void apply(OperationContext context) {
@@ -34,17 +38,18 @@ public class EnumResponsePlugin implements OperationBuilderPlugin {
         Map<String, String> codeDescMap = new LinkedHashMap<>();
         collectEnumMetadata(returnType, codes, codeDescMap);
 
-//        Set<ResponseMessage> responseMessages = new HashSet<>();
-//        ResponseMessage msg= new ResponseMessageBuilder()
-//                .code(200)
-//                .message("返回枚举值:")
-//                .responseModel(new springfox.documentation.schema.ModelRef(returnType.getSimpleName()))
-//                .build();
-//        responseMessages.add(msg);
+        ResolvedType resolvedType = resolveCodeType(returnType);
+        String typeName = resolvedType.getTypeName();
+//        String typeName = getSwaggerTypeName(resolvedType.getErasedType());
+//        if(typeName.contains("Integer")){
+//            typeName=Integer.class.getSimpleName();
+//        }
+
 
         // 3. 修改响应描述和 Schema
         context.operationBuilder()
-            .responseModel(new springfox.documentation.schema.ModelRef(returnType.getSimpleName()))
+                //todo 根据 returnType 类型 的到
+            .responseModel(new springfox.documentation.schema.ModelRef(typeName))
             .deprecated(buildResponseDescription("", codeDescMap));
     }
 
@@ -73,5 +78,31 @@ public class EnumResponsePlugin implements OperationBuilderPlugin {
     @Override
     public boolean supports(DocumentationType delimiter) {
         return true;
+    }
+    private String getSwaggerTypeName(Class<?> type) {
+        if (type == String.class) {
+            return "string";
+        } else if (type == Integer.class || type == int.class) {
+            return "integer";
+        } else if (type == Long.class || type == long.class) {
+            return "long";
+        } else if (type == Boolean.class || type == boolean.class) {
+            return "boolean";
+        } else if (type == Double.class || type == double.class) {
+            return "number";
+        } else if (type == Float.class || type == float.class) {
+            return "number";
+        }
+        return "string"; // 默认兜底
+    }
+
+    private ResolvedType resolveCodeType(Class<?> enumType) {
+        try {
+            Method getCode = enumType.getMethod("getCode");
+            Class<?> codeClass = getCode.getReturnType();
+            return typeResolver.resolve(codeClass);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("枚举必须实现getCode方法", e);
+        }
     }
 }
