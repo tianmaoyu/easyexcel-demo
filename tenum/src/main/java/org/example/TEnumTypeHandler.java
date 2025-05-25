@@ -1,4 +1,4 @@
-package org.example.demomybtis.config;
+package org.example;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -14,13 +14,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @MappedTypes(IEnum.class)
 @MappedJdbcTypes({JdbcType.VARCHAR, JdbcType.INTEGER})
-public class EnumTypeHandler<E extends Enum<E> & IEnum<T>, T> 
+public class TEnumTypeHandler<E extends Enum<E> & IEnum<T>, T>
     extends BaseTypeHandler<E> {
 
     private Class<E> type;
     private Map<T, E> codeMap = new ConcurrentHashMap<>();
 
-    public EnumTypeHandler(Class<E> type) {
+    public TEnumTypeHandler(Class<E> type) {
         if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
         this.type = type;
         E[] enums = type.getEnumConstants();

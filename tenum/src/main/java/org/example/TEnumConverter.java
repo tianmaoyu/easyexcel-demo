@@ -1,4 +1,4 @@
-package org.example.demomybtis.config;
+package org.example;
 
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;

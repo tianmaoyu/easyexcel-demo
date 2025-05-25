@@ -1,5 +1,6 @@
 package org.example.demomybtis.config;
 
+import org.example.TEnumConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +17,10 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private TEnumConverter tEnumConverter;
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(tEnumConverter);
+        registry.addConverter(new TEnumConverter());
     }
 
 

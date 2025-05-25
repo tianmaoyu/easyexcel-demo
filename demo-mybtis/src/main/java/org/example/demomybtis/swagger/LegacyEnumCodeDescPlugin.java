@@ -1,6 +1,6 @@
 package org.example.demomybtis.swagger;
 
-import org.example.demomybtis.config.IEnum;
+import org.example.IEnum;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Model;

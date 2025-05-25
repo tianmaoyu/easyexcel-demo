@@ -2,7 +2,7 @@ package org.example.demomybtis.swagger;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
-import org.example.demomybtis.config.IEnum;
+import org.example.IEnum;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Example;

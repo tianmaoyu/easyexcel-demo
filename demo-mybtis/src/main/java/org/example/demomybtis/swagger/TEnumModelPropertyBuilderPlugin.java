@@ -4,7 +4,7 @@ import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
-import org.example.demomybtis.config.IEnum;
+import org.example.IEnum;
 import org.springframework.stereotype.Component;
 import springfox.documentation.service.AllowableValues;
 import springfox.documentation.spi.DocumentationType;

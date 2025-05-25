@@ -3,6 +3,8 @@ package org.example.demomybtis.config;
 import org.apache.ibatis.exceptions.IbatisException;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.example.TEnumTypeHandler;
+import org.example.IEnum;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +31,7 @@ public class MyBatisAutoConfiguration {
                     // 解析 code 类型
                     Class<?> codeType = resolveCodeType(enumClass);
                     // 动态注册类型处理器
-                    registry.register(enumClass, resolveJdbcType(codeType),new EnumTypeHandler<>((Class) enumClass));
+                    registry.register(enumClass, resolveJdbcType(codeType),new TEnumTypeHandler<>((Class) enumClass));
                 });
         };
     }

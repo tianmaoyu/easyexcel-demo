@@ -1,4 +1,4 @@
-package org.example.demomybtis.config;
+package org.example;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
